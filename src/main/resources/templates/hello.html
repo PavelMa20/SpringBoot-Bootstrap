@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>Hello Person</title>
+</head>
+<body>
+<div align="center">
+    <h1>Hello Person</h1>
+    <br />
+
+    <form action="#" th:action="@{/hello}" th:object="${person}"
+          method="post">
+
+        <table border="0" cellpadding="10">
+            <tr>
+                <td>Person ID:</td>
+                <td>
+                    <input type="text" th:field="*{id}" readonly="readonly" />
+                </td>
+            </tr>
+            <tr>
+                <td>Person Name:</td>
+                <td>
+                    <input type="text" th:field="*{givenName}" />
+                </td>
+            </tr>
+            <tr>
+                <td>SurName:</td>
+                <td><input type="text" th:field="*{surName}" /></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="text" th:field="*{password}" /></td>
+            </tr>
+            <tr>
+                <td>Age:</td>
+                <td><input type="text" th:field="*{age}" /></td>
+            </tr>
+
+        </table>
+    </form>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout">
+    </form>
+</div>
+</body>
+</html>
