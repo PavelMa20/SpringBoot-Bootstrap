@@ -1,6 +1,7 @@
 package com.user.userspring.securityConfig;
 
 import com.user.userspring.handler.LoginSuccessHandler;
+import com.user.userspring.service.PersonService;
 import com.user.userspring.userDetails.PersonDetailsImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,15 +10,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
+
 
 @Component
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+
+    private PersonService personService;
+
+    public SecurityConfig(PersonService personService){
+        this.personService = personService;
+    }
+
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -26,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.oauth2Login() .loginPage("/login").successHandler(new LoginSuccessHandler());
         http.formLogin()
                 // указываем страницу с формой логина
                 .loginPage("/login")
@@ -34,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем action с формы логина
                 .loginProcessingUrl("/login")
                 // Указываем параметры логина и пароля с формы логина
-                .usernameParameter("j_username")
+                .usernameParameter("j_email")
                 .passwordParameter("j_password")
                 // даем доступ к форме логина всем
                 .permitAll();
@@ -55,22 +66,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").anonymous().
                 // защищенные URL
-                antMatchers("/admin/**").hasAuthority("ADMIN").
-                antMatchers("/hello").permitAll().
-                anyRequest().authenticated();
+                        antMatchers("/admin/**").hasAuthority("ADMIN").
+                antMatchers("/user").hasAnyAuthority("USER","ROLE_USER")
 
+                .anyRequest().authenticated();
 
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new PersonDetailsImpl();
+        return new PersonDetailsImpl(personService);
     }
+  /*  @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }*/
 
-    ;
+
 }

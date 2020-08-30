@@ -1,11 +1,12 @@
 package com.user.userspring.service;
 
 import com.user.userspring.Person;
+import com.user.userspring.Role;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+
 public interface PersonService {
     void addPerson(Person person);
 
@@ -17,5 +18,8 @@ public interface PersonService {
 
     Person findByGivenName(String name);
 
+    Person findByEmail(String email);
+
     void removePerson(long id) throws Exception;
+    List<Role> getRoles();
 }

@@ -2,32 +2,39 @@ package com.user.userspring;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+//  https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?response_type=code&
+//  client_id=20900850826-4dqo73m7mo5jdfrgqftgfcilhgp1523h.apps.googleusercontent.com
+//  &scope=openid%20profile%20email
+//  &state=tWcHU-tYkRBTxEaWM_sNeiQy9cz6nf91ONAUlPqzi_U%3D
+//  &redirect_uri=http%3A%2F%2Fspringbootstrap111.org%3A8080%2Flogin%2Foauth2%2Fcode%2Fgoogle
+//  &nonce=Jym4cWNn7x8xYobL1n34fMqhm_WqvFMvM9Xel6esjB8
+//  &flowName=GeneralOAuthFlow
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
+import java.util.*;
 
 @Entity
 @Table(name = "persons")
-//@Proxy(lazy = false)
 public class Person implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private
-    Long id;
-    @Column(name = "givenName")
+    private Long id;
+    @Column(name = "givenName",unique = true)
     private String givenName;
     @Column(name = "surName")
     private String surName;
+    @Column(name = "email",unique = true)
+    private String email;
     @Column(name = "password")
     private String password;
     @Column(name = "age")
     private int age;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH},
+            fetch = FetchType.EAGER)
+    @JoinTable(name = "person_role",
+            uniqueConstraints = @UniqueConstraint(columnNames = {"person_id", "role_id"}),
+            joinColumns = {@JoinColumn(name = "person_id",referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")})
     private Set<Role> roles = new HashSet<>();
 
 
@@ -36,13 +43,12 @@ public class Person implements UserDetails {
     }
 
 
-    public Person(String givenName, String surName, String password, int age, Set<Role> roles) {
+    public Person(String givenName, String surName, String email, String password, int age) {// убрать сет
         this.givenName = givenName;
         this.surName = surName;
         this.password = password;
+        this.email = email;
         this.age = age;
-        this.roles = roles;
-
     }
 
 
@@ -91,23 +97,6 @@ public class Person implements UserDetails {
         this.age = age;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Person)) return false;
-        Person user = (Person) o;
-        return getAge() == user.getAge() &&
-                getId().equals(user.getId()) &&
-                getGivenName().equals(user.getGivenName()) &&
-                surName.equals(user.surName) &&
-                getPassword().equals(user.getPassword()) &&
-                getRoles().equals(user.getRoles());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getGivenName(), surName, getPassword(), getAge(), getRoles());
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -146,5 +135,32 @@ public class Person implements UserDetails {
 
     public void setSurName(String surName) {
         this.surName = surName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return getAge() == person.getAge() &&
+                getId().equals(person.getId()) &&
+                getGivenName().equals(person.getGivenName()) &&
+                getSurName().equals(person.getSurName()) &&
+                getEmail().equals(person.getEmail()) &&
+                getPassword().equals(person.getPassword()) &&
+                getRoles().equals(person.getRoles());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getGivenName(), getSurName(), getEmail(), getPassword(), getAge(), getRoles());
     }
 }

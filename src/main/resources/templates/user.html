@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hello Person</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+            background: #eee;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background: white;
+            overflow-x: hidden;
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #2196F3;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #064579;
+        }
+
+        .main {
+            margin-left: 160px; /* Same as the width of the sidenav */
+            font-size: 28px; /* Increased text to enable scrolling */
+            padding: 0px 10px;
+
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+        .navbar-nav {
+            position: absolute;
+            right: 30px;
+            top: 6px;
+            background: #343a40 !important;
+        }
+
+        .navbar {
+            height: 40px;
+        }
+
+        .navtable {
+            color: aliceblue;
+        }
+
+        .panel {
+            margin-top: 14px;
+            margin-left: 30px;
+        }
+
+        .nav-tabs {
+            margin-left: 30px;
+        }
+
+        .nav-link {
+            font-size: 15px;
+
+        }
+
+        .header {
+            padding-left: 10px;
+            padding-right: 40px;
+            width: 100%;
+            background: #eee;
+            border: solid;
+            border-width: thin;
+            border-color: floralwhite;
+        }
+
+        .table {
+            background: white;
+            size: auto;
+            padding: 10px;
+            font-size: medium;
+        }
+
+        .dtable {
+            padding: 30px;
+        }
+
+        .content {
+            background: white;
+            border: solid;
+            border-width: thin;
+            border-color: floralwhite;
+            width: 95%;
+
+        }
+
+        .newtable {
+            width: 50%;
+            margin: auto;
+        }
+
+        .form-group {
+            height: 65%;
+            font-size: medium;
+        }
+
+        .btn-info {
+            background-color: green;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <!-- Links -->
+    <div class="navbar-nav">
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+    <!-- Navbar text-->
+
+    <div class="info">
+        <table class="navtable">
+            <thead>
+            <th th:text="${headPerson.email}"></th>
+            <th><font face="Arial"> with roles: </font></th>
+            <th>
+                <th:block th:each="role:${headPerson.roles}">
+                    <i th:text="${role.roleName}">role</i><br>
+                </th:block>
+            </th>
+            </thead>
+        </table>
+    </div>
+</nav>
+<div class="sidenav">
+    <a th:href="@{/hello}">User</a>
+</div>
+<div class="main" align="center">
+    <div class="panel">
+        <h1 align="left">User information-page</h1>
+    </div>
+    <div class="content">
+        <div class="header">
+            <h3 align="left">About user</h3>
+        </div>
+        <div class="dtable">
+            <table class="table table-striped" id="table-rows">
+                <thead>
+                <tr>
+                    <th> ID</th>
+                    <th>GivenName</th>
+                    <th>SurName</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Roles</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:object="${person}">
+
+                    <td th:text="${person.id}"> ID</td>
+                    <td th:text="${person.givenName}">Name</td>
+                    <td th:text="${person.surName}">LastName</td>
+                    <td th:text="${person.email}">Email</td>
+                    <td th:text="${person.age}">Age</td>
+                    <td>
+                        <th:block th:each="role:${person.roles}">
+                            <i th:text="${role.roleName}">role</i><br>
+                        </th:block>
+                    </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
+
+
+<!--<div align="center">
+    <h1>Hello Person</h1>
+    <br />
+
+    <form action="#" th:action="@{/hello}" th:object="${person}"
+          method="post">
+
+        <table border="0" cellpadding="10">
+            <tr>
+                <td>Person ID:</td>
+                <td>
+                    <input type="text" th:field="*{id}" readonly="readonly" />
+                </td>
+            </tr>
+            <tr>
+                <td>Person Name:</td>
+                <td>
+                    <input type="text" th:field="*{givenName}" />
+                </td>
+            </tr>
+            <tr>
+                <td>SurName:</td>
+                <td><input type="text" th:field="*{surName}" /></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="email" th:field="*{email}" /></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="text" th:field="*{password}" /></td>
+            </tr>
+            <tr>
+                <td>Age:</td>
+                <td><input type="text" th:field="*{age}" /></td>
+            </tr>
+
+        </table>
+    </form>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout">
+    </form>
+</div>-->
+

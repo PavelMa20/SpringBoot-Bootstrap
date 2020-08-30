@@ -1,5 +1,6 @@
 package com.user.userspring;
 
+import org.hibernate.annotations.Immutable;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -7,18 +8,20 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "roles")
-//@Proxy(lazy = false)
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
+    @Column(name = "roleName",unique = true)
     private String roleName;
 
-    public Role(String roleName) {
-        this.roleName = roleName;
+    public Role(String id ) {
+        this.id = Long.parseLong(id);
     }
+   /* public Role(String roleName ) {
+        this.roleName = roleName;
+    }*/
 
     @Override
     public String getAuthority() {
