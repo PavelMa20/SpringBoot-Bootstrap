@@ -2,13 +2,6 @@ package com.user.userspring;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-//  https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?response_type=code&
-//  client_id=20900850826-4dqo73m7mo5jdfrgqftgfcilhgp1523h.apps.googleusercontent.com
-//  &scope=openid%20profile%20email
-//  &state=tWcHU-tYkRBTxEaWM_sNeiQy9cz6nf91ONAUlPqzi_U%3D
-//  &redirect_uri=http%3A%2F%2Fspringbootstrap111.org%3A8080%2Flogin%2Foauth2%2Fcode%2Fgoogle
-//  &nonce=Jym4cWNn7x8xYobL1n34fMqhm_WqvFMvM9Xel6esjB8
-//  &flowName=GeneralOAuthFlow
 import javax.persistence.*;
 import java.util.*;
 
